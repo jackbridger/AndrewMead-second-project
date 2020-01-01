@@ -1,0 +1,26 @@
+type User {
+  id: ID! @id
+  name: String!
+  email: String! @unique
+  activities: [Activity]! @relation(name:"ActivityToUser", onDelete:SET_NULL)
+  companies:[Company]! @relation(name:"CompanyToUser", onDelete: SET_NULL)
+}
+
+type Company {
+  id: ID! @id
+  name: String!
+  Description: String
+  website: String 
+  employee_count: Int
+  activities: [Activity]! @relation(name:"ActivityToCompany", onDelete:SET_NULL)
+  users: [User]! @relation(name:"CompanyToActivity", onDelete:SET_NULL)
+}
+
+type Activity {
+  id: ID! @id
+  description: String!
+  type_of_activity: String
+  date: String
+  user: User! @relation(name:"ActivityToUser", onDelete:SET_NULL)
+  company: Company @relation(name:"ActivityToCompany", onDelete:SET_NULL)
+}
