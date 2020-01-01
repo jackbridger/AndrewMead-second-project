@@ -7,6 +7,15 @@
                     "default": "http://localhost:4466/"
                 }
             }
+        },
+         "prisma-CRM": {
+            "schemaPath": "src/generated/prisma-CRM.graphql",
+            "extensions": {
+                "endpoints": {
+                    "default": "http://localhost:4466/CRM"
+                }
+            }
         }
+        
     }
 }
