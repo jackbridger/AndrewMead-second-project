@@ -4,11 +4,24 @@ const Query = {
         id: 'abc2',
         email: "jack@g.com"
     }),
-    users: (parent, args, { db }, info) => {
+    users: (parent, args, { db, prisma }, info) => {
+        // if (args.query) {
+        //     return db.userData.filter(x => x.name.includes(args.query))
+        // }
+        // else return db.userData
+
         if (args.query) {
-            return db.userData.filter(x => x.name.includes(args.query))
+
+            return prisma.query.users({
+                where: {
+                    email: args.query
+                }
+            }
+                , info)
         }
-        else return db.userData
+        else return prisma.query.users(null
+            , info)
+
     },
     post: () => ({
         id: "abc3",

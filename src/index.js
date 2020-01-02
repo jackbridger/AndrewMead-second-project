@@ -6,7 +6,12 @@ import User from './resolvers/User'
 import Post from './resolvers/Post'
 import Comment from './resolvers/Comment'
 import Subscription from './resolvers/Subscription';
-import './prisma'
+// import './prisma'
+import { Prisma } from 'prisma-binding'
+const prisma = new Prisma({
+    typeDefs: "./src/generated/prisma.graphql",
+    endpoint: "http://localhost:4466/"
+})
 const pubsub = new PubSub();
 
 const server = new GraphQLServer({
@@ -21,14 +26,12 @@ const server = new GraphQLServer({
     },
     context: {
         db,
-        pubsub
+        pubsub,
+        prisma
     }
 })
 server.start({ port: 4000 }, () => {
     console.log('server is up')
 })
-// prisma.query.users(null, "{id name email }").then(data => {
-//     console.log(data)
-// })
 
 
