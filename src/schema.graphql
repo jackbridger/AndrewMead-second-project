@@ -8,7 +8,7 @@
 
     type Mutation {
         createUser(data: CreateUserInput): User!
-        deleteUser(id:ID!): User!
+        deleteUser(data: DeleteUserInput): User!
         updateUser(id:ID! data: UpdateUserInput! ): User!
         createPost(data: CreatePostInput): Post!
         deletePost(id:ID!): Post!
@@ -28,6 +28,11 @@
     }
     input UpdateCommentInput {
         text: String
+    }
+
+    input DeleteUserInput {
+        id: ID,
+        email: String
     }
 
     input CreatePostInput {
