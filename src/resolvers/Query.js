@@ -4,23 +4,14 @@ const Query = {
         id: 'abc2',
         email: "jack@g.com"
     }),
-    users: (parent, args, { db, prisma }, info) => {
-        // if (args.query) {
-        //     return db.userData.filter(x => x.name.includes(args.query))
-        // }
-        // else return db.userData
-
+    users: (parent, args, { prisma }, info) => {
+        const opArgs = {}
         if (args.query) {
-
-            return prisma.query.users({
-                where: {
-                    email: args.query
-                }
+            opArgs.where = {
+                email_contains: args.query
             }
-                , info)
         }
-        else return prisma.query.users(null
-            , info)
+        return prisma.query.users(opArgs, info)
 
     },
     post: () => ({
@@ -29,14 +20,27 @@ const Query = {
         body: "my body",
         published: true
     }),
-    posts: (parent, args, { db }, info) => {
+    posts: (parent, args, { prisma }, info) => {
+        const opArgs = {};
         if (args.query) {
-            return db.postsData.filter(post => post.title.includes(args.query))
+            opArgs.where = {
+                OR: [{ title_contains: args.query },
+                { body_contains: args.query }]
+            }
         }
-        else return db.postsData
+        return prisma.query.posts(opArgs, info)
     },
-    comments: (parent, args, { db }, info) => {
-        return db.commentsData
+    comments: (parent, args, { prisma }, info) => {
+        console.log('came into comments resolver')
+        console.log(args)
+        const opArgs = {}
+        if (args.query) {
+            opArgs.where = {
+                text_contains: args.query
+            }
+        }
+
+        return prisma.query.comments(opArgs, info)
     }
 }
 

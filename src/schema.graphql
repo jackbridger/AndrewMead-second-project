@@ -3,7 +3,7 @@
         users(query: String): [User]!
         post: Post!
         posts(query: String): [Post]!
-        comments: [Comment]!
+        comments(query:String): [Comment]!
     }
 
     type Mutation {
