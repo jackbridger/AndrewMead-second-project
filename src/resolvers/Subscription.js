@@ -1,12 +1,26 @@
 const Subscription = {
     newComment: {
-        subscribe: (parent, { postID }, { pubsub }, info) => {
-            return pubsub.asyncIterator(`newComment ${postID}`)
-        }
+        subscribe: async (parent, { postID }, { prisma }, info) => {
+            return prisma.subscription.comment({
+                where: {
+                    node: {
+                        post: {
+                            id: postID
+                        }
+                    }
+                }
+            }, info)
+        },
     },
     newPost: {
-        subscribe: (parent, args, { pubsub }, info) => {
-            return pubsub.asyncIterator('newPost')
+        subscribe: async (parent, args, { prisma }, info) => {
+            return prisma.subscription.post({
+                where: {
+                    node: {
+                        published: true
+                    }
+                }
+            }, info)
         }
     }
 

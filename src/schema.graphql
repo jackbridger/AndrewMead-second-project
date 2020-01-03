@@ -7,7 +7,7 @@
     }
 
     type Mutation {
-        createUser(data: CreateUserInput): User!
+        createUser(data: CreateUserInput): CreateUserPayload!
         deleteUser(data: DeleteUserInput): User!
         updateUser(id:ID! data: UpdateUserInput! ): User!
         createPost(data: CreatePostInput): Post!
@@ -20,6 +20,10 @@
     type Subscription {
         newComment(postID: ID!): CommentSubscriptionPayload!,
         newPost: PostSubscriptionPayload!
+    }
+    type CreateUserPayload {
+        user: User!,
+        token: String!
     }
     input CreateCommentInput {
         text: String!, 
@@ -52,19 +56,19 @@
     input CreateUserInput {
         name:String!, 
         email: String!, 
-        age: Int
+        password: String!
     }
     input UpdateUserInput {
         name:String, 
         email: String, 
-        age: Int
+        password: String!
     }
 
     type User{
         id: ID
         name: String!
         email: String!
-        age: Int
+        password: String!
         posts:[Post]!
         comments: [Comment]!
     }
@@ -90,9 +94,9 @@
 
     type PostSubscriptionPayload {
         mutation: MutationType!
-        data: Post!
+        node: Post!
     }
     type CommentSubscriptionPayload {
         mutation: MutationType!
-        data: Comment!
+        node: Comment!
     }

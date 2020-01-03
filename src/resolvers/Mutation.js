@@ -1,13 +1,23 @@
-import uuid from 'uuid/v4'
+import bcrypt from 'bcryptjs'
+import jwt from 'jsonwebtoken'
 
 const Mutation = {
     createUser: async (parent, args, { prisma }, info) => {
         const userExists = await prisma.exists.User({ email: args.data.email })
-        if (userExists) { throw new Error("user exists m8"); }
-        return prisma.mutation.createUser({ data: args.data }, info);
+        if (userExists) throw new Error("user exists")
+        if (args.data.password.length < 8) throw new Error('pw not long')
+
+        const hashedPassword = await bcrypt.hash(args.data.password, 10);
+        const user = await prisma.mutation.createUser({
+            data: {
+                ...args.data,
+                password: hashedPassword
+            }
+        });
+        const token = await jwt.sign({ id: user.id }, 'supersecret');
+        return { user, token }
     },
     deleteUser: async (parent, args, { prisma }, info) => {
-        // Check user exists 
 
         const userExists = await (prisma.exists.User({ id: args.data.id, email: args.data.email }))
         if (!userExists) throw new Error("user doesnt exist");
@@ -17,6 +27,12 @@ const Mutation = {
 
     },
     updateUser: async (parent, { data, id }, { prisma }, info) => {
+        if (data.password) {
+            if (data.password.length < 8) throw new Error('pw not long')
+            const hashedPassword = await bcrypt.hash(data.password, 10);
+            data.password = hashedPassword;
+        }
+
         return prisma.mutation.updateUser({
             where: {
                 id
